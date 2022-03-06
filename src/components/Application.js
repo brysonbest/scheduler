@@ -27,10 +27,21 @@ export default function Application(props) {
       ...state.appointments,
       [id]: appointment
     };
-    setState({
-      ...state, appointments
-    });
-  };
+
+    const sendPutRequest = async () => {
+      try {
+          const resp = await axios.put(`http://localhost:8001/api/appointments/${id}`, appointment);
+          setState({
+            ...state, appointments
+          })
+          console.log(resp.data);
+      } catch (err) {
+          // Handle Error Here
+          console.error(err);
+      }
+    }
+  return sendPutRequest();  
+};
 
   const dailyAppointments = getAppointmentsForDay(state, state.day);
 
