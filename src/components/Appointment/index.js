@@ -6,6 +6,7 @@ import Show from "./Show";
 import Empty from "./Empty";
 import Form from "./Form";
 import Status from "./Status";
+import Confirm from "./Confirm";
 
 import { useVisualMode } from "components/hooks/useVisualMode";
 
@@ -13,6 +14,8 @@ const EMPTY = "EMPTY";
 const SHOW = "SHOW";
 const CREATE = "CREATE";
 const SAVING = "SAVING";
+const DELETING = "DELETING";
+const CONFIRM = "CONFIRM";
 
 export default function Appointment(props) {
 
@@ -20,18 +23,32 @@ export default function Appointment(props) {
     props.interview ? SHOW : EMPTY
   );
 
-  async function load(function1){
+  async function loadSave(function1){
     await function1;
     transition(SHOW);
   }
-  
+
+  async function loadDelete(function1){
+    await function1;
+    transition(EMPTY);
+  }
+
+  function deleteInt() {
+    transition(DELETING);
+    loadDelete(props.cancelInterview(props.id));
+  }
+
   function save(name, interviewer) {
     const interview = {
       student: name,
       interviewer
     };
     transition(SAVING);
-    load(props.bookInterview(props.id, interview));
+    loadSave(props.bookInterview(props.id, interview));
+  }
+
+  function confirm() {
+    transition(CONFIRM);
   }
 
   return (
@@ -39,10 +56,16 @@ export default function Appointment(props) {
         <Header time={props.time} />
         {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
         
-        {mode === SHOW && ( <Show student={props.interview.student} interviewer={props.interview.interviewer} />
+        {mode === SHOW && ( <Show student={props.interview.student} interviewer={props.interview.interviewer} onDelete={confirm} />
         )}
 
         {mode === SAVING && ( <Status message="Saving" />
+        )}
+
+        {mode === DELETING && ( <Status message="Deleting" />
+        )}
+
+        {mode === CONFIRM && ( <Confirm message="Delete Appointment?" onCancel={() => back()} onConfirm={deleteInt} />
         )}
 
         {mode === CREATE && ( <Form interviewers={props.interviewers} onCancel={() => back()} onSave={save}/>
