@@ -29,16 +29,12 @@ export default function Application(props) {
     };
 
     const sendPutRequest = async () => {
-      try {
+
           const resp = await axios.put(`http://localhost:8001/api/appointments/${id}`, appointment);
           setState({
             ...state, appointments
           })
           console.log(resp.data);
-      } catch (err) {
-          // Handle Error Here
-          console.error(err);
-      }
     }
   return sendPutRequest();  
 };
@@ -55,16 +51,11 @@ function cancelInterview(id) {
   console.log(id);
 
   const sendDeleteRequest = async () => {
-    try {
         const resp = await axios.delete(`http://localhost:8001/api/appointments/${id}`);
         setState({
           ...state, appointments
         })
         console.log(resp.data);
-    } catch (err) {
-        // Handle Error Here
-        console.error(err);
-    }
   }
   return sendDeleteRequest(); 
 

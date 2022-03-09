@@ -7,6 +7,7 @@ import Empty from "./Empty";
 import Form from "./Form";
 import Status from "./Status";
 import Confirm from "./Confirm";
+import Error from "./Error";
 
 import { useVisualMode } from "components/hooks/useVisualMode";
 
@@ -17,6 +18,8 @@ const SAVING = "SAVING";
 const DELETING = "DELETING";
 const CONFIRM = "CONFIRM";
 const EDIT = "EDIT";
+const ERROR_SAVE = "ERROR_SAVE";
+const ERROR_DELETE = "ERROR_DELETE";
 
 export default function Appointment(props) {
 
@@ -24,19 +27,27 @@ export default function Appointment(props) {
     props.interview ? SHOW : EMPTY
   );
 
-  async function loadSave(function1){
-    await function1;
-    transition(SHOW);
+  async function loadDelete(id){
+    try{
+      await props.cancelInterview(id);
+      transition(EMPTY);
+    } catch(err) {
+        transition(ERROR_DELETE, true);
+      }
   }
 
-  async function loadDelete(function1){
-    await function1;
-    transition(EMPTY);
+  async function loadSave(id, interview){
+    try{
+      await props.bookInterview(id, interview);
+      transition(SHOW);
+    } catch(err) {
+        transition(ERROR_SAVE, true);
+      }
   }
 
-  function deleteInt() {
-    transition(DELETING);
-    loadDelete(props.cancelInterview(props.id));
+  function destroy() {
+    transition(DELETING, true);
+    loadDelete(props.id)
   }
 
   function save(name, interviewer) {
@@ -44,8 +55,9 @@ export default function Appointment(props) {
       student: name,
       interviewer
     };
-    transition(SAVING);
-    loadSave(props.bookInterview(props.id, interview));
+    transition(SAVING)
+    loadSave(props.id, interview)
+
   }
 
   function confirm() {
@@ -63,10 +75,16 @@ export default function Appointment(props) {
         {mode === SAVING && ( <Status message="Saving" />
         )}
 
+        {mode === ERROR_SAVE && ( <Error message="Error Saving" onClose={() => back()}/>
+        )}
+        
+        {mode === ERROR_DELETE && ( <Error message="Error Deleting" onClose={() => back()}/>
+        )}
+
         {mode === DELETING && ( <Status message="Deleting" />
         )}
 
-        {mode === CONFIRM && ( <Confirm message="Delete Appointment?" onCancel={() => back()} onConfirm={deleteInt} />
+        {mode === CONFIRM && ( <Confirm message="Delete Appointment?" onCancel={() => back()} onConfirm={destroy} />
         )}
 
         {mode === CREATE && ( <Form interviewers={props.interviewers} onCancel={() => back()} onSave={save}/>
