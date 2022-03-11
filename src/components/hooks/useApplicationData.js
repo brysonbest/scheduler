@@ -53,10 +53,22 @@ function cancelInterview(id) {
     [id]: appointment
   };
 
+  const daySpots = function(){
+    for(let i = 0; i < state.day.length; i++){
+      if(state.days[i]['name'] === state.day){
+        const newDays = [ ...state.days ];
+        newDays[i]['spots'] = state.days[i]['spots'] + 1; 
+         return newDays;
+      } 
+    }
+  }
+
+  const spots = daySpots();
+
   const sendDeleteRequest = async () => {
         const resp = await axios.delete(`http://localhost:8001/api/appointments/${id}`);
         setState({
-          ...state, appointments
+          ...state, appointments, days:spots
         })
         console.log(resp.data);
   }
