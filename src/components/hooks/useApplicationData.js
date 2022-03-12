@@ -26,8 +26,12 @@ export function useApplicationData() {
       for(let i = 0; i < state.day.length; i++){
         if(state.days[i]['name'] === state.day){
           const newDays = [ ...state.days ];
-          newDays[i]['spots'] = state.days[i]['spots'] - 1; 
-           return newDays;
+          if(state.appointments[id]['interview'] === null){
+            newDays[i]['spots'] = state.days[i]['spots'] - 1; 
+             return newDays;
+          }
+          newDays[i]['spots'] = state.days[i]['spots']; 
+          return newDays;
         } 
       }
     }
