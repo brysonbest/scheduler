@@ -9,7 +9,7 @@ import Status from "./Status";
 import Confirm from "./Confirm";
 import Error from "./Error";
 
-import { useVisualMode } from "components/hooks/useVisualMode";
+import { useVisualMode } from "hooks/useVisualMode";
 
 const EMPTY = "EMPTY";
 const SHOW = "SHOW";
@@ -50,12 +50,17 @@ export default function Appointment(props) {
   }
 
   function save(name, interviewer) {
-    const interview = {
-      student: name,
-      interviewer,
-    };
-    transition(SAVING);
-    loadSave(props.id, interview);
+    if (name && interviewer) {
+      console.log(name, interviewer);
+      const interview = {
+        student: name,
+        interviewer,
+      };
+      transition(SAVING);
+      loadSave(props.id, interview);
+    } else {
+      transition(ERROR_SAVE, true);
+    }
   }
 
   function confirm() {
