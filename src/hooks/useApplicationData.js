@@ -112,7 +112,6 @@ export function useApplicationData() {
         },
       }),
     ]).then((all) => {
-      // console.log(all[0].data);
       setState((prev) => ({
         ...prev,
         days: all[0].data,

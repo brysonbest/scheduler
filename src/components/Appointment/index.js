@@ -52,7 +52,6 @@ export default function Appointment(props) {
 
   function save(name, interviewer) {
     if (name && interviewer) {
-      console.log(name, interviewer);
       const interview = {
         student: name,
         interviewer,
