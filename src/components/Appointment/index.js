@@ -20,6 +20,7 @@ const CONFIRM = "CONFIRM";
 const EDIT = "EDIT";
 const ERROR_SAVE = "ERROR_SAVE";
 const ERROR_DELETE = "ERROR_DELETE";
+const ERROR_INCOMPLETE = "ERROR_INCOMPLETE";
 
 export default function Appointment(props) {
   const { mode, transition, back } = useVisualMode(
@@ -59,7 +60,7 @@ export default function Appointment(props) {
       transition(SAVING);
       loadSave(props.id, interview);
     } else {
-      transition(ERROR_SAVE, true);
+      transition(ERROR_INCOMPLETE);
     }
   }
 
@@ -89,6 +90,13 @@ export default function Appointment(props) {
 
       {mode === ERROR_DELETE && (
         <Error message="Error Deleting" onClose={() => back()} />
+      )}
+
+      {mode === ERROR_INCOMPLETE && (
+        <Error
+          message="Error - Please Complete Both Fields"
+          onClose={() => back()}
+        />
       )}
 
       {mode === DELETING && <Status message="Deleting" />}
