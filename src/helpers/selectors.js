@@ -28,13 +28,19 @@ export function getInterview(state, interview) {
 }
 
 export function getInterviewersForDay(state, day) {
-  if (state.days === null || state.days === undefined) {
-    return [];
+  let tempArray = [];
+  if (
+    state.days === null ||
+    state.days === undefined ||
+    state.days.length === 0
+  ) {
+    return tempArray;
   }
   const dayObject = state.days.filter((each) => each.name === day)[0];
 
-  if (dayObject) {
-    const dayArray = { ...dayObject }["interviewers"];
-    return dayArray.map((each) => state.interviewers[each]);
+  if (!dayObject) {
+    return tempArray;
   }
+  const dayArray = { ...dayObject }["interviewers"];
+  return dayArray.map((each) => state.interviewers[each]);
 }
