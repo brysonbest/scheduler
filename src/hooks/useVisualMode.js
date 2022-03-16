@@ -14,10 +14,12 @@ export function useVisualMode(initial) {
   };
 
   const back = () => {
-    const newHistory = [...history];
-    newHistory.pop();
-    setMode([...newHistory].pop());
-    setHistory([...newHistory]);
+    if (history.length > 1) {
+      const newHistory = [...history];
+      newHistory.pop();
+      setMode([...newHistory].pop());
+      setHistory([...newHistory]);
+    }
   };
 
   return {
